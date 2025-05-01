@@ -233,7 +233,7 @@ cdef class KiteTicker:
         client = KiteListener(self, self._loop)
 
         try:
-            _, client = await ws_connect(
+            transport, client = await ws_connect(
                                 lambda: client,
                                 self._ws_url,
                                 ssl_context= ssl_context,
@@ -241,7 +241,7 @@ cdef class KiteTicker:
                                 auto_ping_idle_timeout= 3,
                                 auto_ping_reply_timeout= 2    
                                 )
-            await client.transport.wait_disconnected()            
+            await transport.wait_disconnected()            
         except (socket.gaierror, OSError, WSError) as e:
             logger.error(f"Error occured on connect :: {e}")            
             if reconnect:
